@@ -1,8 +1,8 @@
-# Cloud Run 上に phpMyAdmin を起動するハンズオン
+# Hands On phpMyAdmin on Cloud Run to Cloud SQL
 
 ## 概要
 
-+ Cloud Run 上の phpMyAdmin を経由して Cloud SQL にアクセスする環境を構築します
+Cloud Run 上の phpMyAdmin を経由して Cloud SQL にアクセスする環境を構築するハンズオンです
 
 ![](./overview.png)
 
