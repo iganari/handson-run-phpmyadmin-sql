@@ -182,16 +182,26 @@ gcloud beta iam service-accounts delete ${_common}-sa@${_gc_pj_id}.iam.gservicea
 <details>
 <summary>2. Cloud SQL のリソースを削除する</summary>
 
++ DB 用のユーザの削除をします
+
 ```
 gcloud sql users delete ${_common} \
   --instance=${_common}-insrance-${_date} \
   --project ${_gc_pj_id} \
   --async
+```
 
++ DB 内の Database の削除をします
+
+```
 gcloud beta sql databases delete ${_common}-db \
   --instance=${_common}-insrance-${_date} \
   --project ${_gc_pj_id}
+```
 
++ Cloud SQL Instance 自体の削除をします
+
+```
 gcloud beta sql instances delete ${_common}-insrance-${_date} \
   --project ${_gc_pj_id} \
   --async
