@@ -16,7 +16,7 @@ https://hub.docker.com/_/phpmyadmin
 https://github.com/phpmyadmin/docker
 ```
 
-## 作ってみる
+## ハンズオン
 
 ### 0. 事前の定義
 
@@ -150,12 +150,6 @@ gcloud beta run services describe ${_common} \
 
 ---> Cloud Run 上の phpMyAdmin 経由して Cloud SQL にアクセスすることが出来ました :)
 
-### 5. セキュリティを強化する 
-
-Cloud Run の前に [Cloud Load Balancing](https://cloud.google.com/load-balancing) を設置し [Identity-Aware Proxy](https://cloud.google.com/iap) にて Cloud IAM による認証をするか、 ID トークンを使って Cloud Run にて Cloud IAM による認証をしましょう
-
-[はてなぶろぐ | Cloud Run を ID トークンによる簡易認証で見てみる ( Authorization: Bearer )](https://iganari.hatenablog.com/entry/2022/02/12/173547)
-
 ## クリーンアップ
 
 <details>
@@ -210,3 +204,14 @@ gcloud beta sql instances delete ${_common}-insrance-${_date} \
 </details>
 
 これでハンズオンは終了です。お疲れ様でした !! :)
+
+## 次のステップ
+
+以下のことに挑戦してみましょう!!
+
++ Cloud Run の前に [Cloud Load Balancing](https://cloud.google.com/load-balancing) を設置し [Identity-Aware Proxy](https://cloud.google.com/iap) にて Cloud IAM による認証をする
++ ID トークンを使って Cloud Run にて Cloud IAM による認証をする( 参考 [はてなぶろぐ | Cloud Run を ID トークンによる簡易認証で見てみる ( Authorization: Bearer )](https://iganari.hatenablog.com/entry/2022/02/12/173547) )
+
+## 最後に
+
+Have Fan!! :)
