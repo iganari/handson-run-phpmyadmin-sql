@@ -31,6 +31,12 @@ export _region='asia-northeast1'
 export _date=`date +"%Y%m%d%H%M"`
 ```
 
++ Google Cloud と認証します
+
+```
+gcloud auth login --no-launch-browser
+```
+
 + API の有効化をします
   + 一回やれば OK
 
@@ -62,6 +68,8 @@ gcloud beta sql databases create ${_common}-db \
 ```
 
 + Cloud SQL 用の User を作成します
+  + **DB 内のユーザ名** = **${_common}** とした
+  + **DB 内のユーザのパスワード** = **${_gc_pj_id}** とした
 
 ```
 gcloud sql users create ${_common} \
@@ -98,11 +106,12 @@ gcloud beta projects add-iam-policy-binding ${_gc_pj_id} \
 
 + Cloud Run の Service をデプロイします
   + [phpMyaAmin](https://hub.docker.com/_/phpmyadmin) の最新ののコンテナイメージ `phpmyadmin:5.2.1-apache` を使う
-  + `--session-affinity` : phpMyAdmin がセッションを必要とするため。
   + `--service-account` : Cloud Run の Service Account の指定
+  + `--add-cloudsql-instances` : 接続したい Cloud SQL Instance の情報
   + `--set-env-vars` : **phpmyadmin:5.2.1-apache** が読み込める設定を Cloud Run の環境変数として設定
+  + `--session-affinity` : phpMyAdmin がセッションを必要とするため
+  + `--max-instances` : 起動するインスタンス数の最大値
   + `--allow-unauthenticated` : サンプルなので allUser からのアクセスを許可
-  + `--concurrency` : 1インスタンスあたりの最大同時リクエスト数
 
 ```
 gcloud beta run deploy ${_common} \
@@ -117,14 +126,14 @@ gcloud beta run deploy ${_common} \
   --set-env-vars PMA_SOCKET="/cloudsql/${_gc_pj_id}:${_region}:${_common}-insrance-${_date}" \
   --set-env-vars APACHE_PORT=8080 \
   --session-affinity \
-  --concurrency 1 \
+  --max-instances 1 \
   --allow-unauthenticated
 ```
 
 + Cloud Run の Service の状態を確認します
 
 ```
-gcloud beta run services describe phpadmin \
+gcloud beta run services describe ${_common} \
   --region ${_region} \
   --project ${_gc_pj_id}
 ```
@@ -150,13 +159,23 @@ Cloud Run の前に [Cloud Load Balancing](https://cloud.google.com/load-balanci
 ## クリーンアップ
 
 <details>
-<summary>1. Cloud Run の Service を削除する</summary>
+<summary>1. Cloud Run の Service と専用に作成した Service Account を削除する</summary>
+
++ Cloud Run の Service の削除をします
 
 ```
 gcloud beta run services delete ${_common} \
   --region ${_region} \
   --project ${_gc_pj_id}
 ```
+
++ Service Account の削除をします
+
+```
+gcloud beta iam service-accounts delete ${_common}-sa@${_gc_pj_id}.iam.gserviceaccount.com \
+  --project ${_gc_pj_id}
+```
+
 
 </details>
 
@@ -174,7 +193,10 @@ gcloud beta sql databases delete ${_common}-db \
   --project ${_gc_pj_id}
 
 gcloud beta sql instances delete ${_common}-insrance-${_date} \
-  --project ${_gc_pj_id}
+  --project ${_gc_pj_id} \
+  --async
 ```
 
 </details>
+
+これでハンズオンは終了です。お疲れ様でした !! :)
